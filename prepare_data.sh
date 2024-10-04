@@ -1,0 +1,2 @@
+wget -P "./datasets/eval/advbench" "https://raw.githubusercontent.com/llm-attacks/llm-attacks/refs/heads/main/data/advbench/harmful_behaviors.csv"
+wget -P "./datasets/train" "https://raw.githubusercontent.com/vinid/safety-tuned-llamas/refs/heads/main/data/training/safety_only_data_Instructions.json"

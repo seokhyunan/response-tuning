@@ -1,0 +1,11 @@
+transformers
+trl
+peft
+vllm
+torch
+bitsandbytes
+openai
+tensorboardX
+lm-eval
+alpaca_eval
+flash-attn

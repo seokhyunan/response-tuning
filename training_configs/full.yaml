@@ -1,0 +1,19 @@
+# 4GPU based configuration
+output_dir: "checkpoints"
+evaluation_strategy: "no"
+per_device_train_batch_size: 4
+per_device_eval_batch_size: 4
+gradient_accumulation_steps: 8
+learning_rate: 0.00002
+lr_scheduler_type: "cosine"
+save_strategy: "steps"
+save_steps: 2000
+bf16: True
+tf32: True
+fsdp: "full_shard auto_wrap"
+fsdp_config:
+  fsdp_transformer_layer_cls_to_wrap: 'LlamaDecoderLayer'
+warmup_ratio: 0.03
+weight_decay: 0.
+num_train_epochs: 3
+save_total_limit: 1

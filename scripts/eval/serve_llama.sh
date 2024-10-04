@@ -1,0 +1,2 @@
+DEVICES=$1
+CUDA_VISIBLE_DEVICES=$DEVICES vllm serve meta-llama/Meta-Llama-3.1-70B-Instruct --dtype bfloat16 --api-key meta-llama/Meta-Llama-3.1-70B-Instruct --tensor-parallel-size 4 --max_model_len 15000

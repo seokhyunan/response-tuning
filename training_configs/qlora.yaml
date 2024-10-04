@@ -1,0 +1,17 @@
+seed: 0
+full_determinism: True
+per_device_train_batch_size: 8
+gradient_accumulation_steps: 8 # batch_size = 64 
+eval_strategy: "no"
+optim: "paged_adamw_32bit"
+learning_rate: 0.0001
+lr_scheduler_type: "constant"
+save_strategy: "epoch"
+bf16: True
+num_train_epochs: 10
+max_grad_norm: 0.3
+report_to: "tensorboard"
+gradient_checkpointing: True
+logging_steps: 1
+logging_strategy: "steps"
+save_strategy: "epoch"
