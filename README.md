@@ -1,6 +1,7 @@
-# Response Tuning: Aligning Large Language Models without Instructions
+# Response Tuning: Aligning Large Language Models without Instruction
 
-This repository contains the code and resources supporting the paper ["Response Tuning: Aligning Large Language Models without Instructions"](https://arxiv.org/abs/2410.02465) by Seokhyun An and Hyounghun Kim.
+This repository contains the code and resources supporting the paper "[Response Tuning: Aligning Large Language Models without Instruction](https://arxiv.org/abs/2410.02465)" by Seokhyun An and Hyounghun Kim.
+
 
 ## Overview
 
