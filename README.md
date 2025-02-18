@@ -1,19 +1,11 @@
-# Response Tuning: Aligning Large Language Models without Instruction
+# Revealing the Inherent Instructability of Pre-Trained Language Models
 
-This repository contains the code and resources supporting the paper "[Response Tuning: Aligning Large Language Models without Instruction](https://arxiv.org/abs/2410.02465)" by Seokhyun An and Hyounghun Kim.
+This repository contains the code and resources supporting the paper "[Revealing the Inherent Instructability of Pre-Trained Language Models](https://arxiv.org/abs/2410.02465)" by [Seokhyun An](https://seokhyunan.com), Minji Kim and [Hyounghun Kim](https://hyounghk.github.io/).
 
 
 ## Overview
 
-Our paper presents Response Tuning (RT), which eliminates the instruction-conditioning step in instruction tuning and focuses solely on response supervision. By omitting the instruction-conditioning step, we can examine the isolated impact of establishing an adequate response space in alignment. We provide the training and evaluation scripts to aid reproducibility.
-
-In the paper, we have shown that:
-
-- RT models, trained solely using responses, can effectively respond to a wide range of instructions. They exhibit comparable performance to instruction-tuned models across various benchmarks, including AlpacaEval, JustEval, MMLU, PIQA, and more.
-- By controlling the training response distribution, we can achieve specific alignment objectives:
-    - Refining the structural attributes of responses can improve user preference.
-    - Incorporating refusals into the RT data enables the models to responsibly handle unsafe queries.
-- These observations also hold in an in-context learning setting.
+We propose Response Tuning (RT) to verify our hypothesis that the ability to process instructions can be developed in the pre-training stage. Unlike instruction tuning, RT does not condition the response tokens on the paired instruction, which precludes the model from learning to generate responses according to instructions. Rather, it focuses on learning the response distribution.
 
 ## Prerequisites
 
@@ -64,11 +56,10 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 python3 refine_responses.py \
 ```
 </details>
 
-To reproduce our safety experiments, create an IT dataset mixed with safety-focused examples, and train the model using this dataset:
-
+To reproduce our refusal experiments, create an IT dataset mixed with refusal examples, and train the model using this dataset:
 
 ```bash
-python3 generate_safety_mixture.py \
+python3 generate_refusal_mixture.py \
     --target_dataset [TRAINING_DATASET_PATH] \
     --num_safety_examples [NUMBER_OF_SAFETY_EXAMPLES_TO_MIX]
 ```
@@ -77,12 +68,11 @@ python3 generate_safety_mixture.py \
 <summary>Example</summary>
 
 ```bash
-python3 generate_safety_mixture.py \
+python3 generate_refusal_mixture.py \
     --target_dataset "datasets/train/lima.jsonl" \
     --num_safety_examples 200
 ```
 </details>
-
 
 
 ## Model Training (QLoRA)
@@ -122,7 +112,6 @@ After training, you can interact with the trained model:
 CUDA_VISIBLE_DEVICES=[GPU_IDS] python3 chat.py --model_id [MODEL_PATH]
 ```
 
-
 ## Instructability Evaluation
 
 You can perform AlpacaEval, JustEval, and core capabilities evaluations (MMLU, OpenBookQA, HellaSwag, ARC, GSM8K, and PIQA) using the following scripts. After running the evaluation, you can find the results in `[ckpt_path]/evals/[benchmark_name]`.
@@ -152,25 +141,9 @@ For core capabilities evaluation:
 ./scripts/eval/core.sh [GPU_IDS] [MODEL_PATH]
 ```
 
-<details>
-<summary>Note on CUDA Out-of-Memory (OOM) errors</summary>
+## Refusal Evaluation
 
-When using Mistral and Gemma-2 models with vLLM, you may encounter CUDA OOM errors. To mitigate this issue, reduce the `gpu_memory_utilization` parameter by setting it to a lower value. You can do this by uncommenting the following lines in the evaluation script:
-
-```bash
-# if [[ $MODEL_PATH == *"gemma"* ]]; then
-#     GPU_UTIL=0.65
-# elif [[ $MODEL_PATH == *"Mistral"* ]]; then
-#     GPU_UTIL=0.5
-# else
-#     GPU_UTIL=0.85
-# fi
-```
-</details>
-
-## Safety Evaluation
-
-Safety evaluation requires running an evaluator LLM. Since vLLM currently does not natively support running multiple models in a single Python script, you need to first host the Llama-3.1-70B-Instruct model on your local server.
+Refusal evaluation requires running an evaluator LLM. Since vLLM currently does not natively support running multiple models in a single Python script, you need to first host the Llama-3.1-70B-Instruct model on your local server.
 
 To host the 70B model (requires at least 4 GPUs such as A6000 48GB or A100 40/80GB), you can use the following command:
 
@@ -178,10 +151,10 @@ To host the 70B model (requires at least 4 GPUs such as A6000 48GB or A100 40/80
 ./scripts/eval/serve_llama.sh [GPU_IDS]
 ```
 
-To run the safety evaluations, execute:
+To run the refusal evaluations, execute:
 
 ```bash
-./scripts/eval/safety.sh [GPU_IDS] [MODEL_PATH]
+./scripts/eval/refusal.sh [GPU_IDS] [MODEL_PATH]
 ```
 
 ## In-Context Response Learning
@@ -192,19 +165,15 @@ You can reproduce our in-context learning experiment results using the following
 ./scripts/eval/just_eval/just_eval_urial.sh [GPU_IDS] [HF_MODEL_PATH] [urial/urial_r/0shot]
 ```
 
-## Acknowledgments
-
-This work builds upon a multitude of existing studies and open-source projects. We would like to express our sincere gratitude to all the researchers and engineers who have contributed to and maintained these invaluable resources.
-
 ## Citation
 
 If you find our results and code useful, please consider citing our paper:
 
 ```latex
-@misc{an2024rt,
-      title={Response Tuning: Aligning Large Language Models without Instruction}, 
-      author={Seokhyun An and Hyounghun Kim},
-      year={2024},
+@misc{an2025revealing,
+      title={Revealing the Inherent Instructability of Pre-Trained Language Models}, 
+      author={Seokhyun An and Minji Kim and Hyounghun Kim},
+      year={2025},
       eprint={2410.02465},
       archivePrefix={arXiv},
       primaryClass={cs.CL},
